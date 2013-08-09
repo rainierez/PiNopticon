@@ -94,6 +94,7 @@ if __name__ == '__main__':
     attempt = "0000"
     passcode = "1912"    
     haltcode = "5764"
+    count = 0
     with open("/home/pi/Alarm/armed.txt", "r+") as fo:
         fo.seek(0, 0)
         fo.write("0")
@@ -116,10 +117,10 @@ if __name__ == '__main__':
             digit = kp.getKey()
      
         # Print the result
-        print digit
+        print "Digit Entered:       %s"%digit
         attempt = (attempt[1:] + str(digit))  
-        print attempt
-
+        print "Attempt value:       %s"%attempt
+        
         if (attempt == passcode):
             with open("/home/pi/Alarm/armed.txt", "r+") as fo:
                 fo.seek(0, 0)
@@ -147,5 +148,14 @@ if __name__ == '__main__':
         elif (attempt == haltcode):
             subprocess.call("mpg123 /home/pi/Alarm/shutdown.mp3", shell=True)
             subprocess.call("halt", shell=True)
+        else:
+            counter += 1
+            print "Entered digit count: %s"%counter
+            if (counter >= 4):
+                print "Incorrect code!"
+                sleep(3)
+                print "Try Again" 
+                sleep(1)
+                counter = 0
         
         time.sleep(0.5)
